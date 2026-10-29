@@ -2186,11 +2186,7 @@ export async function inlineLocalFonts(html) {
 
 async function launchChromium(options) {
   const { chromium } = await import('playwright');
-  const launchOptions = { ...options };
-  if (!launchOptions.executablePath && process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
-    launchOptions.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
-  }
-  return chromium.launch(launchOptions);
+  return chromium.launch(options);
 }
 
 /**

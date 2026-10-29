@@ -1,10 +1,12 @@
-# CV -- Jordan Miller, PMP®
+# CV -- Sample Candidate (Fictional Reference)
+
+> *Note: This is a fictional reference CV demonstrating structure, STAR proof points, and metric formatting for Technical Project Managers, Agile Delivery Leads, and Scrum Masters.*
 
 **Location:** Chicago, IL (Open to Remote)
-**Email:** jordan.miller@example.com
-**LinkedIn:** linkedin.com/in/jordanmiller-pm
-**Portfolio:** jordanmiller-pm.dev
-**GitHub:** github.com/jordanmiller-pm
+**Email:** candidate@example.com
+**LinkedIn:** linkedin.com/in/example
+**Portfolio:** https://example.com
+**GitHub:** github.com/example
 
 ## Professional Summary
 
@@ -49,9 +51,9 @@ PMP®-certified Technical Project Manager and Agile Delivery Lead with 6+ years 
 
 ## Education & Certifications
 
-- **Project Management Professional (PMP®)** -- Project Management Institute (PMI), License #3849102
+- **Project Management Professional (PMP®)** -- Project Management Institute (PMI)
 - **Certified ScrumMaster (CSM®)** -- Scrum Alliance
-- **BS in Information Systems & Technology** -- University of Illinois at Urbana-Champaign (2018)
+- **BS in Information Systems & Technology** -- State University (2018)
 
 ## Skills & Competencies
 
