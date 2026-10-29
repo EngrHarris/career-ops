@@ -97,9 +97,9 @@ if (menu.length < 50) {
     pass('discovery menu does not describe evaluation as A-F');
   }
 
-  const menuCommands = [...menu.matchAll(/^\s*\/career-ops\s+([a-z0-9/-]+|\{JD\})\s+→/gm)].map((m) => m[1]);
+  const menuCommands = [...menu.matchAll(/^\s*\/career-ops\s+([a-z0-9/_-]+|\{JD\})\s+→/gm)].map((m) => m[1]);
   const menuSet = new Set(menuCommands);
-  const routedInputs = [...skill.matchAll(/^\|\s*`([a-z0-9/-]+)`\s*\|\s*`([^`]+)`\s*\|$/gm)].map((m) => m[1]);
+  const routedInputs = [...skill.matchAll(/^\|\s*`([a-z0-9/_-]+)`\s*\|\s*`([^`]+)`\s*\|$/gm)].map((m) => m[1]);
   const KNOWN_ALIASES = new Set(['inbox']);
 
   const missingFromMenu = routedInputs
