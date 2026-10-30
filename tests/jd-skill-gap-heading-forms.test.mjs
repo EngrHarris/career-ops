@@ -96,8 +96,23 @@ test('experience, skills, and abilities permutations are recognized', () => {
   assertExtracts(`Experience, Skills and Abilities${BULLETS}`, 'experience-skills-abilities-no-oxford');
   assertExtracts(`Experience, Skills, & Abilities${BULLETS}`, 'experience-skills-abilities-ampersand');
   assertExtracts(`Knowledge, Skills, and Abilities${BULLETS}`, 'knowledge-skills-abilities');
+  assertExtracts(`Skills and Abilities${BULLETS}`, 'skills-and-abilities');
+  assertExtracts(`Skills & Abilities${BULLETS}`, 'skills-amp-abilities');
   assertExtracts(`Experience and Skills${BULLETS}`, 'experience-and-skills');
   assertExtracts(`Experience & Skills${BULLETS}`, 'experience-amp-skills');
   assertExtracts(`Skills, Experience, and Abilities${BULLETS}`, 'skills-experience-abilities');
 });
+
+test('unbulleted requirement sentence is parsed for skills rather than skipped as a heading', () => {
+  const jd = '## Requirements\nMinimum qualifications include Python and Kubernetes.\n\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+});
+
+test('multi-section JD with Minimum Qualifications followed by Skills and Abilities extracts skills from both', () => {
+  const jd = '## Minimum Qualifications\n- Strong Python experience\n## Skills and Abilities\n- Familiarity with Kubernetes\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python']);
+});
+
 
