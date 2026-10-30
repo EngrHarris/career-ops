@@ -344,11 +344,14 @@ function scanJd(jdText) {
           addSkillTokens(inline, skills);
         } else if (inline.trim() !== '' && isRequirementHeading && sepMatch[0] !== '：') {
           const opener = /^\s*([A-Z][a-z]+)\s+([a-z]+)/.exec(inline);
-          const hasLaterSkills = extractSkills(inline).size > 0;
+          const stripped = opener ? inline.slice(inline.indexOf(opener[1]) + opener[1].length) : inline;
+          const fullSkills = extractSkills(inline);
+          const strippedSkills = extractSkills(stripped);
+          const keepsAll = [...fullSkills].every((s) => strippedSkills.has(s));
           const isListConnector = opener && (opener[2] === 'and' || opener[2] === 'or');
-          const isUnknownSkill = isListConnector && hasLaterSkills;
-          const unknownOpener = opener && !isUnknownSkill && extractSkills(opener[1]).size === 0;
-          addSkillTokens(unknownOpener ? inline.slice(inline.indexOf(opener[1]) + opener[1].length) : inline, skills);
+          const isUnknownSkill = isListConnector && fullSkills.size > 0;
+          const unknownOpener = opener && keepsAll && !isUnknownSkill && extractSkills(opener[1]).size === 0;
+          addSkillTokens(unknownOpener ? stripped : inline, skills);
         }
       }
       continue;

@@ -192,3 +192,9 @@ test('grammatical opener like Proficient preceding recognized skills is excluded
   assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
 });
 
+test('recognized multi-word skill phrase like Natural language processing is retained when opener check runs', () => {
+  const jd = '## Requirements: Natural language processing and Python\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Natural language processing', 'Python', 'Terraform']);
+});
+
