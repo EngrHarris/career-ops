@@ -330,17 +330,24 @@ function scanJd(jdText) {
       sawRequirementSection = true;
       // "Requirements: SQL; dbt; Tableau" puts the whole list on the header
       // line, with no bullets under it. A separator is required so a sentence
-      // such as "About you: Curious and kind" is not read as a list.
-      // The full-width colon and the CJK separators (、，；) count the same as
-      // their ASCII forms: "任职要求：Python、Docker".
-      const colon = headerLine.search(/[:：]/);
-      const inline = colon === -1 ? '' : headerLine.slice(colon + 1);
-      if (/[;,、，；]/.test(inline)) {
-        addSkillTokens(inline, skills);
-      } else if (inline.trim() !== '' && !/about\s+you/i.test(headerLine) && headerLine[colon] !== '：') {
-        const opener = /^\s*([A-Z][a-z]+)\s+[a-z]/.exec(inline);
-        const unknownOpener = opener && extractSkills(opener[1]).size === 0;
-        addSkillTokens(unknownOpener ? inline.slice(opener[0].length - 1) : inline, skills);
+      // such as "About you: Curious and kind" or "Who you are: Passionate team player"
+      // is not read as a list.
+      // Inline requirements can be introduced by colons (: / ：) or dashes (" - ", " — ").
+      const sepMatch = /[:：]|\s+[-–—]\s+/.exec(headerLine);
+      const inline = sepMatch ? headerLine.slice(sepMatch.index + sepMatch[0].length) : '';
+      if (sepMatch) {
+        const isRequirementHeading =
+          /\b(?:require\w*|qualif\w*|must[- ]have|preferred|nice[- ]to[- ]have|skills?|experience|knowledge|abilities)\b|[\u4e00-\u9fa5]/i.test(
+            headerLine.slice(0, sepMatch.index)
+          );
+        if (/[;,、，；]/.test(inline)) {
+          addSkillTokens(inline, skills);
+        } else if (inline.trim() !== '' && isRequirementHeading && sepMatch[0] !== '：') {
+          const opener = /^\s*([A-Z][a-z]+)\s+[a-z]/.exec(inline);
+          const hasLaterSkills = extractSkills(inline).size > 0;
+          const unknownOpener = opener && !hasLaterSkills && extractSkills(opener[1]).size === 0;
+          addSkillTokens(unknownOpener ? inline.slice(opener[0].length - 1) : inline, skills);
+        }
       }
       continue;
     }

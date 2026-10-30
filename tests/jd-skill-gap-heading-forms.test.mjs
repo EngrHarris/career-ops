@@ -168,7 +168,21 @@ test('slash-separated skill terms like Knowledge / Skills / Abilities are recogn
   const found = extractJdSkills(multiSectionJd).sort();
   assert.deepEqual(found, ['Kubernetes', 'Python']);
 });
+test('dash-separated heading like Experience/Skills - Python and Kubernetes extracts inline skills', () => {
+  const jd = 'Experience/Skills - Python and Kubernetes\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+});
 
+test('inline requirements retain leading unrecognized skill when recognized skills follow', () => {
+  const jd = '## Requirements: Gleam and Python\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Gleam', 'Python', 'Terraform']);
+});
 
-
+test('descriptive heading like Who you are does not turn personality into skill candidates', () => {
+  const jd = 'Who you are: Collaborative and passionate.\n\n## Requirements\n- Python\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Python']);
+});
 
