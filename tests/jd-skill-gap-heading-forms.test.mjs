@@ -122,5 +122,44 @@ test('multi-section JD with Minimum Qualifications followed by Skills and Abilit
   assert.deepEqual(found, ['Kubernetes', 'Python']);
 });
 
+test('slash separator in heading boundary and trailing required qualifier on combinations are recognized', () => {
+  assertExtracts(`Requirements / Qualifications${BULLETS}`, 'requirements-slash-qualifications');
+  assertExtracts(`Requirements/Qualifications${BULLETS}`, 'requirements-slash-qualifications-no-space');
+  assertExtracts(`Skills and Experience Required${BULLETS}`, 'skills-and-experience-required');
+  assertExtracts(`Skills and Experience Requirements${BULLETS}`, 'skills-and-experience-requirements');
+  assertExtracts(`Skills and Experience Requirement${BULLETS}`, 'skills-and-experience-requirement');
+});
+
+test('four-term combinations are recognized', () => {
+  assertExtracts(`Experience, Knowledge, Skills, and Abilities${BULLETS}`, 'exp-know-skills-abilities-oxford');
+  assertExtracts(`Experience, Knowledge, Skills and Abilities${BULLETS}`, 'exp-know-skills-abilities-no-oxford');
+  assertExtracts(`Experience, Knowledge, Skills, & Abilities${BULLETS}`, 'exp-know-skills-abilities-amp');
+  assertExtracts(`Experience, Knowledge, Skills, and Abilities Required${BULLETS}`, 'exp-know-skills-abilities-required');
+});
+
+test('qualified label followed by inline text remains requirement content', () => {
+  const jd = '## Requirements\nMinimum qualifications: Python and Kubernetes.\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+
+  const jdAbout = '## About you\nAbout you: Curious and kind.\n- Python\n';
+  const foundAbout = extractJdSkills(jdAbout).sort();
+  assert.deepEqual(foundAbout, ['Python']);
+});
+
+test('multi-section JD confirming four-term heading closes earlier block and extracts skills from both', () => {
+  const jd = `
+## Minimum Qualifications
+- Python
+- Kubernetes
+
+Experience, Knowledge, Skills, and Abilities:
+- Terraform
+- Docker
+`;
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Docker', 'Kubernetes', 'Python', 'Terraform']);
+});
+
 
 

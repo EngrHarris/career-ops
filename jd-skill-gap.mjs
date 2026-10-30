@@ -80,11 +80,22 @@ const CV_PATH = join(getCareerOpsRoot(), 'cv.md');
 // bullet extraction runs). Stripping only doubled `**`/`__` markers — never
 // a single `*`/`_` — leaves a literal bullet character untouched, since a
 // real bullet is one asterisk, not two.
-const HEADING_BOUNDARY = '(?=\\s*(?:[:：\\-–—*_\\(\\)\\[\\]【】]|$))';
+const HEADING_BOUNDARY = '(?=\\s*(?:[:：/／\\-–—*_\\(\\)\\[\\]【】]|$))';
+// When a qualifications/requirements label carries a qualifying prefix
+// ("Minimum qualifications", "Role requirements"), require that any colon
+// be followed only by whitespace to end-of-line (or punctuation/EOL), so inline
+// requirement sentences like "Minimum qualifications: Python and Kubernetes"
+// are not misclassified as headings (which would drop the sentence's skills
+// when it lacks semicolon/comma separators). Standalone headings like
+// "Minimum qualifications:" or "Minimum qualifications" continue to match.
+const QUALIFIED_HEADING_BOUNDARY = '(?=\\s*(?:[:：]\\s*$|[/／\\-–—*_\\(\\)\\[\\]【】]|$))';
+const SKILL_TERM = '(?:experience|knowledge|skills|abilities)';
+const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*)';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
     'required',
-    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+(?:experience|knowledge|skills|abilities))?${HEADING_BOUNDARY}`,
+    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${QUALIFIED_HEADING_BOUNDARY}`,
+    `(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
     'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
     // (?:'|’)?\s*re|\s+are (not just (?:'|’)?\s*re): the contracted-only form
     // matched "we're"/"we re" but not the equally common uncontracted "we are"
@@ -106,7 +117,7 @@ const REQUIREMENT_HEADER_RE = new RegExp(
     "it(?:'|’)?s\\s+important\\s+to\\s+us\\s+that\\s+you\\s+have",
     'it\\s+would\\s+be\\s+great\\s+if\\s+you\\s+ha(?:ve|d)',
     'ideal\\s+candidate',
-    `(?:experience|knowledge|skills|abilities)(?:,\\s*|\\s+(?:and|&)\\s+)(?:experience|knowledge|skills|abilities)(?:,?\\s+(?:and|&)\\s+(?:experience|knowledge|skills|abilities))?${HEADING_BOUNDARY}`,
+    `(?:${SKILL_TERM}${SKILL_SEP}){1,3}${SKILL_TERM}(?:\\s+(?:required|requirements?))?${HEADING_BOUNDARY}`,
   ].join('|') + ')s?\\b|(?:' + [
     // zh-TW / zh-CN requirement headers.
     // 104 / 1111 / CakeResume / Yourator all use variants of these headings.
