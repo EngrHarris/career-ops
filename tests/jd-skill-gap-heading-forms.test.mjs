@@ -89,6 +89,9 @@ test('qualified qualification headings like "Role Qualifications" are recognized
   assertExtracts(`Minimum Qualifications${BULLETS}`, 'minimum-qualifications');
   assertExtracts(`Basic Qualifications${BULLETS}`, 'basic-qualifications');
   assertExtracts(`Role Requirements${BULLETS}`, 'role-requirements');
+  assertExtracts(`Qualifications and Experience${BULLETS}`, 'qualifications-and-experience');
+  assertExtracts(`Qualifications & Experience${BULLETS}`, 'qualifications-amp-experience');
+  assertExtracts(`Requirements and Skills${BULLETS}`, 'requirements-and-skills');
 });
 
 test('experience, skills, and abilities permutations are recognized', () => {
@@ -107,6 +110,10 @@ test('unbulleted requirement sentence is parsed for skills rather than skipped a
   const jd = '## Requirements\nMinimum qualifications include Python and Kubernetes.\n\n- Terraform\n';
   const found = extractJdSkills(jd).sort();
   assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+
+  const jdCombo = '## Requirements\nExperience and skills in Python and Kubernetes are required.\n\n- Terraform\n';
+  const foundCombo = extractJdSkills(jdCombo).sort();
+  assert.deepEqual(foundCombo, ['Kubernetes', 'Python', 'Terraform']);
 });
 
 test('multi-section JD with Minimum Qualifications followed by Skills and Abilities extracts skills from both', () => {
@@ -114,5 +121,6 @@ test('multi-section JD with Minimum Qualifications followed by Skills and Abilit
   const found = extractJdSkills(jd).sort();
   assert.deepEqual(found, ['Kubernetes', 'Python']);
 });
+
 
 

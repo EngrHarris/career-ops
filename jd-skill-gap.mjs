@@ -80,10 +80,11 @@ const CV_PATH = join(getCareerOpsRoot(), 'cv.md');
 // bullet extraction runs). Stripping only doubled `**`/`__` markers — never
 // a single `*`/`_` — leaves a literal bullet character untouched, since a
 // real bullet is one asterisk, not two.
+const HEADING_BOUNDARY = '(?=\\s*(?:[:：\\-–—*_\\(\\)\\[\\]【】]|$))';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
     'required',
-    '(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualifications?|requirements?)(?=\\s*(?:[:：\\-–—*_\\(\\)\\[\\]【】]|$))',
+    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+(?:experience|knowledge|skills|abilities))?${HEADING_BOUNDARY}`,
     'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
     // (?:'|’)?\s*re|\s+are (not just (?:'|’)?\s*re): the contracted-only form
     // matched "we're"/"we re" but not the equally common uncontracted "we are"
@@ -105,7 +106,7 @@ const REQUIREMENT_HEADER_RE = new RegExp(
     "it(?:'|’)?s\\s+important\\s+to\\s+us\\s+that\\s+you\\s+have",
     'it\\s+would\\s+be\\s+great\\s+if\\s+you\\s+ha(?:ve|d)',
     'ideal\\s+candidate',
-    '(?:experience|knowledge|skills|abilities)(?:,\\s*|\\s+(?:and|&)\\s+)(?:experience|knowledge|skills|abilities)(?:,?\\s+(?:and|&)\\s+(?:experience|knowledge|skills|abilities))?',
+    `(?:experience|knowledge|skills|abilities)(?:,\\s*|\\s+(?:and|&)\\s+)(?:experience|knowledge|skills|abilities)(?:,?\\s+(?:and|&)\\s+(?:experience|knowledge|skills|abilities))?${HEADING_BOUNDARY}`,
   ].join('|') + ')s?\\b|(?:' + [
     // zh-TW / zh-CN requirement headers.
     // 104 / 1111 / CakeResume / Yourator all use variants of these headings.
