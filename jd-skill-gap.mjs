@@ -343,10 +343,12 @@ function scanJd(jdText) {
         if (/[;,、，；]/.test(inline)) {
           addSkillTokens(inline, skills);
         } else if (inline.trim() !== '' && isRequirementHeading && sepMatch[0] !== '：') {
-          const opener = /^\s*([A-Z][a-z]+)\s+[a-z]/.exec(inline);
+          const opener = /^\s*([A-Z][a-z]+)\s+([a-z]+)/.exec(inline);
           const hasLaterSkills = extractSkills(inline).size > 0;
-          const unknownOpener = opener && !hasLaterSkills && extractSkills(opener[1]).size === 0;
-          addSkillTokens(unknownOpener ? inline.slice(opener[0].length - 1) : inline, skills);
+          const isListConnector = opener && (opener[2] === 'and' || opener[2] === 'or');
+          const isUnknownSkill = isListConnector && hasLaterSkills;
+          const unknownOpener = opener && !isUnknownSkill && extractSkills(opener[1]).size === 0;
+          addSkillTokens(unknownOpener ? inline.slice(inline.indexOf(opener[1]) + opener[1].length) : inline, skills);
         }
       }
       continue;

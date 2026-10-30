@@ -186,3 +186,9 @@ test('descriptive heading like Who you are does not turn personality into skill 
   assert.deepEqual(found, ['Python']);
 });
 
+test('grammatical opener like Proficient preceding recognized skills is excluded', () => {
+  const jd = '## Requirements: Proficient in Python and Kubernetes\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+});
+
