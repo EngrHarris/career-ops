@@ -79,3 +79,25 @@ test('an asterisk bullet whose text starts with a keyword is still a bullet, not
 test('a bolded skill inside a bullet still extracts correctly', () => {
   assertExtracts('## Requirements\n- **Python** and **Kubernetes**\n- **Terraform**\n', 'bold-skill-in-bullet');
 });
+
+// Headings with qualifiers (e.g. "Role Qualifications", "Minimum Qualifications")
+// and experience/skills/abilities permutations (#6255 Item 5).
+test('qualified qualification headings like "Role Qualifications" are recognized', () => {
+  assertExtracts(`Role Qualifications${BULLETS}`, 'role-qualifications');
+  assertExtracts(`## Role Qualifications\n${BULLETS}`, 'markdown-role-qualifications');
+  assertExtracts(`**Role Qualifications**\n${BULLETS}`, 'bold-role-qualifications');
+  assertExtracts(`Minimum Qualifications${BULLETS}`, 'minimum-qualifications');
+  assertExtracts(`Basic Qualifications${BULLETS}`, 'basic-qualifications');
+  assertExtracts(`Role Requirements${BULLETS}`, 'role-requirements');
+});
+
+test('experience, skills, and abilities permutations are recognized', () => {
+  assertExtracts(`Experience, Skills, and Abilities${BULLETS}`, 'experience-skills-abilities-oxford');
+  assertExtracts(`Experience, Skills and Abilities${BULLETS}`, 'experience-skills-abilities-no-oxford');
+  assertExtracts(`Experience, Skills, & Abilities${BULLETS}`, 'experience-skills-abilities-ampersand');
+  assertExtracts(`Knowledge, Skills, and Abilities${BULLETS}`, 'knowledge-skills-abilities');
+  assertExtracts(`Experience and Skills${BULLETS}`, 'experience-and-skills');
+  assertExtracts(`Experience & Skills${BULLETS}`, 'experience-amp-skills');
+  assertExtracts(`Skills, Experience, and Abilities${BULLETS}`, 'skills-experience-abilities');
+});
+

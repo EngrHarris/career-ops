@@ -82,7 +82,9 @@ const CV_PATH = join(getCareerOpsRoot(), 'cv.md');
 // real bullet is one asterisk, not two.
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
-    'required', 'requirements', 'qualifications', 'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
+    'required',
+    '(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualification|requirement)',
+    'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
     // (?:'|’)?\s*re|\s+are (not just (?:'|’)?\s*re): the contracted-only form
     // matched "we're"/"we re" but not the equally common uncontracted "we are"
     // (#4273 — the Netflix posting that surfaced this used the uncontracted,
@@ -103,7 +105,7 @@ const REQUIREMENT_HEADER_RE = new RegExp(
     "it(?:'|’)?s\\s+important\\s+to\\s+us\\s+that\\s+you\\s+have",
     'it\\s+would\\s+be\\s+great\\s+if\\s+you\\s+ha(?:ve|d)',
     'ideal\\s+candidate',
-    'skills\\s+(?:and|&)\\s+experience',
+    '(?:experience|knowledge|skills)(?:,\\s*|\\s+(?:and|&)\\s+)(?:experience|knowledge|skills)(?:,?\\s+(?:and|&)\\s+abilities)?',
   ].join('|') + ')s?\\b|(?:' + [
     // zh-TW / zh-CN requirement headers.
     // 104 / 1111 / CakeResume / Yourator all use variants of these headings.
