@@ -81,21 +81,12 @@ const CV_PATH = join(getCareerOpsRoot(), 'cv.md');
 // a single `*`/`_` — leaves a literal bullet character untouched, since a
 // real bullet is one asterisk, not two.
 const HEADING_BOUNDARY = '(?=\\s*(?:[:：/／\\-–—*_\\(\\)\\[\\]【】]|$))';
-// When a qualifications/requirements label carries a qualifying prefix
-// ("Minimum qualifications", "Role requirements"), require that any colon
-// be followed only by whitespace to end-of-line (or punctuation/EOL), so inline
-// requirement sentences like "Minimum qualifications: Python and Kubernetes"
-// are not misclassified as headings (which would drop the sentence's skills
-// when it lacks semicolon/comma separators). Standalone headings like
-// "Minimum qualifications:" or "Minimum qualifications" continue to match.
-const QUALIFIED_HEADING_BOUNDARY = '(?=\\s*(?:[:：]\\s*$|[/／\\-–—*_\\(\\)\\[\\]【】]|$))';
 const SKILL_TERM = '(?:experience|knowledge|skills|abilities)';
-const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*)';
+const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*|\\s*[/／]\\s*)';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
     'required',
-    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${QUALIFIED_HEADING_BOUNDARY}`,
-    `(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
+    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
     'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
     // (?:'|’)?\s*re|\s+are (not just (?:'|’)?\s*re): the contracted-only form
     // matched "we're"/"we re" but not the equally common uncontracted "we are"
@@ -344,7 +335,13 @@ function scanJd(jdText) {
       // their ASCII forms: "任职要求：Python、Docker".
       const colon = headerLine.search(/[:：]/);
       const inline = colon === -1 ? '' : headerLine.slice(colon + 1);
-      if (/[;,、，；]/.test(inline)) addSkillTokens(inline, skills);
+      if (/[;,、，；]/.test(inline)) {
+        addSkillTokens(inline, skills);
+      } else if (inline.trim() !== '' && !/about\s+you/i.test(headerLine) && headerLine[colon] !== '：') {
+        const opener = /^\s*([A-Z][a-z]+)\s+[a-z]/.exec(inline);
+        const unknownOpener = opener && extractSkills(opener[1]).size === 0;
+        addSkillTokens(unknownOpener ? inline.slice(opener[0].length - 1) : inline, skills);
+      }
       continue;
     }
     if (inRequirementsBlock && line.trim() === '') continue;

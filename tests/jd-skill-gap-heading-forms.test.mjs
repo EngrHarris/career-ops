@@ -147,19 +147,28 @@ test('qualified label followed by inline text remains requirement content', () =
   assert.deepEqual(foundAbout, ['Python']);
 });
 
-test('multi-section JD confirming four-term heading closes earlier block and extracts skills from both', () => {
-  const jd = `
+test('qualified heading with inline requirements extracts inline skills and subsequent bullets', () => {
+  const jd = '## Minimum Qualifications: Python and Kubernetes\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+});
+
+test('slash-separated skill terms like Knowledge / Skills / Abilities are recognized', () => {
+  assertExtracts(`## Knowledge / Skills / Abilities\n${BULLETS}`, 'knowledge-slash-skills-slash-abilities');
+  assertExtracts(`Knowledge / Skills / Abilities${BULLETS}`, 'unhashed-knowledge-slash-skills');
+  assertExtracts(`Skills / Experience${BULLETS}`, 'skills-slash-experience');
+  
+  const multiSectionJd = `
 ## Minimum Qualifications
 - Python
-- Kubernetes
 
-Experience, Knowledge, Skills, and Abilities:
-- Terraform
-- Docker
+## Knowledge / Skills / Abilities
+- Kubernetes
 `;
-  const found = extractJdSkills(jd).sort();
-  assert.deepEqual(found, ['Docker', 'Kubernetes', 'Python', 'Terraform']);
+  const found = extractJdSkills(multiSectionJd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python']);
 });
+
 
 
 
