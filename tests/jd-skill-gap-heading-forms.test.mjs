@@ -203,6 +203,10 @@ test('extended requirement and qualification headings like "Requirements for thi
   assertExtracts(`Requirements for the role:${BULLETS}`, 'requirements-for-the-role-colon');
   assertExtracts(`Qualifications we look for${BULLETS}`, 'qualifications-we-look-for');
   assertExtracts(`## Requirements for this role\n${BULLETS}`, 'markdown-requirements-for-this-role');
+  assertExtracts(`Requirement${BULLETS}`, 'singular-requirement');
+  assertExtracts(`Qualification${BULLETS}`, 'singular-qualification');
+  assertExtracts(`## Requirement\n${BULLETS}`, 'markdown-singular-requirement');
+  assertExtracts(`## Qualification\n${BULLETS}`, 'markdown-singular-qualification');
 });
 
 
