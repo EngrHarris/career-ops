@@ -207,6 +207,15 @@ test('extended requirement and qualification headings like "Requirements for thi
   assertExtracts(`Qualification${BULLETS}`, 'singular-qualification');
   assertExtracts(`## Requirement\n${BULLETS}`, 'markdown-singular-requirement');
   assertExtracts(`## Qualification\n${BULLETS}`, 'markdown-singular-qualification');
+  assertExtracts(`KSA${BULLETS}`, 'ksa-heading');
+  assertExtracts(`## KSA\n${BULLETS}`, 'markdown-ksa-heading');
+  assertExtracts(`## KSA:\n${BULLETS}`, 'markdown-ksa-colon');
+});
+
+test('full-width colon in qualified English heading extracts inline skills', () => {
+  const jd = 'Minimum qualifications：Python and Kubernetes\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
 });
 
 

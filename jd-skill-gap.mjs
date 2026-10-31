@@ -86,6 +86,7 @@ const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*|\\s*[/／]\\s*)';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
     'required', 'requirements', 'qualifications',
+    `ksa${HEADING_BOUNDARY}`,
     `(?:requirement|qualification)${HEADING_BOUNDARY}`,
     `(?:(?:role|job|position|minimum|basic|key|core)\\s+)(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
     `(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})${HEADING_BOUNDARY}`,
@@ -344,7 +345,11 @@ function scanJd(jdText) {
           );
         if (/[;,、，；]/.test(inline)) {
           addSkillTokens(inline, skills);
-        } else if (inline.trim() !== '' && isRequirementHeading && sepMatch[0] !== '：') {
+        } else if (
+          inline.trim() !== '' &&
+          isRequirementHeading &&
+          (sepMatch[0] !== '：' || !/[\u4e00-\u9fa5]/.test(headerLine.slice(0, sepMatch.index)))
+        ) {
           const opener = /^\s*([A-Z][a-z]+)\s+([a-z]+)/.exec(inline);
           const stripped = opener ? inline.slice(inline.indexOf(opener[1]) + opener[1].length) : inline;
           const fullSkills = extractSkills(inline);
