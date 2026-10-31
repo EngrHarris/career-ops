@@ -85,8 +85,9 @@ const SKILL_TERM = '(?:experience|knowledge|skills|abilities)';
 const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*|\\s*[/／]\\s*)';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
-    'required',
-    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)?(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
+    'required', 'requirements', 'qualifications',
+    `(?:(?:role|job|position|minimum|basic|key|core)\\s+)(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
+    `(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})${HEADING_BOUNDARY}`,
     'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
     // (?:'|’)?\s*re|\s+are (not just (?:'|’)?\s*re): the contracted-only form
     // matched "we're"/"we re" but not the equally common uncontracted "we are"

@@ -198,3 +198,11 @@ test('recognized multi-word skill phrase like Natural language processing is ret
   assert.deepEqual(found, ['Natural language processing', 'Python', 'Terraform']);
 });
 
+test('extended requirement and qualification headings like "Requirements for this role" are recognized', () => {
+  assertExtracts(`Requirements for this role${BULLETS}`, 'requirements-for-this-role');
+  assertExtracts(`Requirements for the role:${BULLETS}`, 'requirements-for-the-role-colon');
+  assertExtracts(`Qualifications we look for${BULLETS}`, 'qualifications-we-look-for');
+  assertExtracts(`## Requirements for this role\n${BULLETS}`, 'markdown-requirements-for-this-role');
+});
+
+
