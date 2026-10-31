@@ -340,7 +340,7 @@ function scanJd(jdText) {
       const inline = sepMatch ? headerLine.slice(sepMatch.index + sepMatch[0].length) : '';
       if (sepMatch) {
         const isRequirementHeading =
-          /\b(?:require\w*|qualif\w*|must[- ]have|preferred|nice[- ]to[- ]have|skills?|experience|knowledge|abilities)\b|[\u4e00-\u9fa5]/i.test(
+          /\b(?:require\w*|qualif\w*|must[- ]have|preferred|nice[- ]to[- ]have|skills?|experience|knowledge|abilities|ksa)\b|[\u4e00-\u9fa5]/i.test(
             headerLine.slice(0, sepMatch.index)
           );
         if (/[;,、，；]/.test(inline)) {

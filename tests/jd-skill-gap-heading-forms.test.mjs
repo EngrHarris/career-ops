@@ -218,4 +218,10 @@ test('full-width colon in qualified English heading extracts inline skills', () 
   assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
 });
 
+test('inline skills on a KSA heading are extracted alongside following bullets', () => {
+  const jd = '## KSA: Python and Kubernetes\n- Terraform\n';
+  const found = extractJdSkills(jd).sort();
+  assert.deepEqual(found, ['Kubernetes', 'Python', 'Terraform']);
+});
+
 
