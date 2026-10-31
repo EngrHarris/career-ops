@@ -85,7 +85,8 @@ const SKILL_TERM = '(?:experience|knowledge|skills|abilities)';
 const SKILL_SEP = '(?:,?\\s+(?:and|&)\\s+|,\\s*|\\s*[/／]\\s*)';
 const REQUIREMENT_HEADER_RE = new RegExp(
   '^#{0,6}\\s*\u3010?\\s*(?:(?:' + [
-    'required', 'requirements?', 'qualifications?',
+    'required', 'requirements', 'qualifications',
+    `(?:requirement|qualification)${HEADING_BOUNDARY}`,
     `(?:(?:role|job|position|minimum|basic|key|core)\\s+)(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})?${HEADING_BOUNDARY}`,
     `(?:qualifications?|requirements?)(?:\\s+(?:and|&)\\s+${SKILL_TERM})${HEADING_BOUNDARY}`,
     'must[- ]have', 'preferred', 'nice[- ]to[- ]have',
